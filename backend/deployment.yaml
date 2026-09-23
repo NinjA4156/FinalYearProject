@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: socket-project
+
+spec:
+  replicas: 2 #Replica of the container
+
+  selector:
+    matchLabels:
+      app: socket-project
+
+  template:
+    metadata:
+      labels:
+        app: socket-project
+
+    spec:
+      containers: # This is where we specify the container image
+        - name: socket-project
+          image: socket_project:latest #image name 
+          imagePullPolicy: Never #With this i pull images from minkube local docker images
+          ports:
+            - containerPort: 3000 

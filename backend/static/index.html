@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CLient Connected</title>
+</head>
+
+<body>
+    <h1>Client Connected</h1>
+    <button id="messageBtn">Send to Server</button>
+    <button id="room1Btn">Send to Room 1</button>
+    <button id="room2Btn">Send to Room 2</button>
+    <button id="room1onlyBtn">Send to Room 1 Only</button>
+    <button id="room2onlyBtn">Send to Room 2 Only</button>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.on("user-count", (data) => {
+            console.log("Count Data", data)
+        })
+
+        socket.on("Message", (data) => {
+            console.log("Message from the server", data)
+        })
+
+        document.getElementById("messageBtn").addEventListener("click", () => {
+            socket.emit("clickHere", { name: "Manish" })
+        })
+
+        document.getElementById("room1Btn").addEventListener("click", () => {
+            socket.emit("joinRoom", { name: "Manish", room: "room1" })
+        })
+
+        document.getElementById("room2Btn").addEventListener("click", () => {
+            socket.emit("joinRoom", { name: "Manish", room: "room2" })
+        })
+
+        document.getElementById("room1onlyBtn").addEventListener("click", () => {
+            socket.emit("msgRoom", { name: "Manish", room: "room1" })
+        })
+
+        document.getElementById("room2onlyBtn").addEventListener("click", () => {
+            socket.emit("msgRoom", { name: "Manish", room: "room2" })
+        })
+    </script>
+</body>
+
+</html>
