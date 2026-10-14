@@ -6,6 +6,9 @@ import Home from './pages/Home'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Dashboard from './pages/Dashboard'
+import GetTicket from './pages/GetTicket'
+import StaffRoute from './components/StaffRoute'
+import StaffDashboard from './pages/StaffDashboard'
 
 export default function App() {
   return (
@@ -22,6 +25,22 @@ export default function App() {
                 <ProtectedRoute>
                   <Dashboard />
                 </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/get-ticket"
+              element={
+                <ProtectedRoute>
+                  <GetTicket />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/staff/dashboard"
+              element={
+                <StaffRoute>
+                  <StaffDashboard />
+                </StaffRoute>
               }
             />
           </Routes>

@@ -3,7 +3,7 @@ import { supabase } from '../lib/supabaseClient'
 import { useAuth } from '../context/AuthContext'
 
 export default function Navbar() {
-    const { user, loading } = useAuth()
+    const { user, loading, isStaff } = useAuth()
 
     async function handleLogout() {
         await supabase.auth.signOut()
@@ -29,6 +29,10 @@ export default function Navbar() {
                             <>
                                 <Link to="/login" className="hover:underline">Login</Link>
                                 <Link to="/register" className="hover:underline">Register</Link>
+                                <Link to="/get-ticket" className="hover:underline">Get Ticket</Link>
+                                {isStaff && (
+                                    <Link to="/staff/dashboard" className="hover:underline">Staff</Link>
+                                )}
                             </>
                         )
                     )}

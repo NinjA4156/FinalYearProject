@@ -6,10 +6,9 @@ const AuthContext = createContext(null)
 export function AuthProvider({ children }) {
     const [session, setSession] = useState(null)
     const [profile, setProfile] = useState(null)
+    const [profileUserId, setProfileUserId] = useState(null) // whose profile we've loaded
     const [loading, setLoading] = useState(true)
 
-    // Listen for login/logout. This also fires once on startup with the
-    // existing session (if any), so we know when the initial check is done.
     useEffect(() => {
         const {
             data: { subscription },
@@ -20,11 +19,11 @@ export function AuthProvider({ children }) {
         return () => subscription.unsubscribe()
     }, [])
 
-    // Load the profile whenever the logged-in user changes.
     const userId = session?.user?.id
     useEffect(() => {
         if (!userId) {
             setProfile(null)
+            setProfileUserId(null)
             return
         }
         let cancelled = false
@@ -34,14 +33,23 @@ export function AuthProvider({ children }) {
             .eq('id', userId)
             .maybeSingle()
             .then(({ data, error }) => {
-                if (!cancelled) setProfile(error ? null : data)
+                if (cancelled) return
+                setProfile(error ? null : data)
+                setProfileUserId(userId)
             })
         return () => {
             cancelled = true
         }
     }, [userId])
 
-    const value = { user: session?.user ?? null, profile, loading }
+    const value = {
+        user: session?.user ?? null,
+        profile,
+        loading,
+        // true while a logged-in user's profile is still being fetched
+        profileLoading: Boolean(userId) && profileUserId !== userId,
+        isStaff: profile?.role === 'staff' || profile?.role === 'admin',
+    }
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
